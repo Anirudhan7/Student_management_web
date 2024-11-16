@@ -18,10 +18,10 @@ class StudentModelAdapter extends TypeAdapter<StudentModel> {
     };
     return StudentModel(
       id: fields[0] as int?,
-      rollno: fields[1] as dynamic,
+      rollno: fields[1] as String,
       name: fields[2] as String,
       department: fields[3] as String,
-      phoneno: fields[4] as dynamic,
+      phoneno: fields[4] as String?,
       imageurl: fields[5] as String?,
     );
   }

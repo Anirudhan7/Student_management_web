@@ -1,14 +1,14 @@
-
 import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+
 part 'student_model.g.dart';
-@HiveType(typeId: 0) // You can choose any unique type ID
+
+@HiveType(typeId: 0)
 class StudentModel {
   @HiveField(0)
   int? id;
 
   @HiveField(1)
-  final String rollno;
+  final dynamic rollno;
 
   @HiveField(2)
   final String name;
@@ -17,7 +17,7 @@ class StudentModel {
   final String department;
 
   @HiveField(4)
-  final String? phoneno;
+  final dynamic phoneno;
 
   @HiveField(5)
   final String? imageurl;
@@ -30,15 +30,4 @@ class StudentModel {
     required this.phoneno,
     this.imageurl,
   });
-
-  static fromMap(Map<String, dynamic> student) {
-    return StudentModel(
-      id: student['id'],
-      rollno: student['rollno'],
-      name: student['name'],
-      department: student['department'],
-      phoneno: student['phoneno'],
-      imageurl: student['imageurl'],
-    );
-  }
 }

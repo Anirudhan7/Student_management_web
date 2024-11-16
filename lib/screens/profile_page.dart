@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:student_management_web/model/student_model.dart';
-
+import '../model/student_model.dart';
 
 class StudentProfileScreen extends StatelessWidget {
   final StudentModel student;
@@ -22,32 +20,32 @@ class StudentProfileScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: 20),
-             GestureDetector(
-                    onTap: () {
-                      if (student.imageurl != null) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Image.file(File(student.imageurl!)),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      }
+            GestureDetector(
+              onTap: () {
+                if (student.imageurl != null) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.file(File(student.imageurl!)),
+                          ],
+                        ),
+                      );
                     },
-                    child: CircleAvatar(
-                      radius: 80,
-                       backgroundImage: student.imageurl != null
+                  );
+                }
+              },
+              child: CircleAvatar(
+                radius: 80,
+                backgroundImage: student.imageurl != null
                     ? FileImage(File(student.imageurl!))
                     : null,
                 child: student.imageurl == null ? Icon(Icons.person) : null,
-                    ),
-                  ),
+              ),
+            ),
             SizedBox(height: 20),
             Text(
               student.name,
@@ -56,7 +54,7 @@ class StudentProfileScreen extends StatelessWidget {
             SizedBox(height: 10),
             Text(
               "Roll No: ${student.rollno}",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18 , fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 10),
@@ -75,4 +73,3 @@ class StudentProfileScreen extends StatelessWidget {
     );
   }
 }
-

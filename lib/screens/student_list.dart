@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:student_management_web/functions/functions.dart';
-import 'package:student_management_web/model/student_model.dart';
-import 'add_student.dart';
+import 'package:student_management_web/screens/profile_page.dart';
+import '../functions/functions.dart';
+import '../model/student_model.dart';
 
 class StudentInfo extends StatefulWidget {
   const StudentInfo({Key? key}) : super(key: key);
@@ -25,7 +25,6 @@ class _StudentInfoState extends State<StudentInfo> {
 
   Future<void> _fetchStudentsData() async {
     List<StudentModel> students = await getAllStudents();
-
     setState(() {
       _studentsData = students;
     });
@@ -35,8 +34,7 @@ class _StudentInfoState extends State<StudentInfo> {
     List<StudentModel> students = await getAllStudents();
     if (searchController.text.isNotEmpty) {
       students = students
-          .where((student) => student.name .toLowerCase()
-              .contains(searchController.text.toLowerCase()))
+          .where((student) => student.name.toLowerCase().contains(searchController.text.toLowerCase()))
           .toList();
     }
 
@@ -47,14 +45,10 @@ class _StudentInfoState extends State<StudentInfo> {
 
   Future<void> _showEditDialog(int index) async {
     final student = _studentsData[index];
-    final TextEditingController nameController =
-        TextEditingController(text: student.name);
-    final TextEditingController rollnoController =
-        TextEditingController(text: student.rollno);
-    final TextEditingController departmentController =
-        TextEditingController(text: student.department);
-    final TextEditingController phonenoController =
-        TextEditingController(text: student.phoneno);
+    final TextEditingController nameController = TextEditingController(text: student.name);
+    final TextEditingController rollnoController = TextEditingController(text: student.rollno.toString());
+    final TextEditingController departmentController = TextEditingController(text: student.department);
+    final TextEditingController phonenoController = TextEditingController(text: student.phoneno.toString());
 
     showDialog(
       context: context,
@@ -111,22 +105,18 @@ class _StudentInfoState extends State<StudentInfo> {
           ),
           TextButton(
             onPressed: () async {
-              await updateStudent(
-                StudentModel(
-                  id: student.id,
-                  rollno: rollnoController.text,
-                  name: nameController.text,
-                  department: departmentController.text,
-                  phoneno: phonenoController.text,
-                  imageurl: _selectedImage != null
-                      ? _selectedImage!.path
-                      : student.imageurl,
-                ),
-              );
+              await updateStudent(index, StudentModel(
+                id: student.id,
+                rollno: rollnoController.text,
+                name: nameController.text,
+                department: departmentController.text,
+                phoneno: phonenoController.text,
+                imageurl: _selectedImage != null ? _selectedImage!.path : student.imageurl,
+              ));
               Navigator.of(context).pop();
               _fetchStudentsData();
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  backgroundColor: const Color.fromARGB(255, 76, 175, 102),
+                  backgroundColor: Colors.green,
                   content: Text("Changes Saved Successfully")));
             },
             child: Text("Save"),
@@ -141,27 +131,18 @@ class _StudentInfoState extends State<StudentInfo> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Student Information"),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddStudent()),
-              ).then((_) => _fetchStudentsData());
-            },
-          ),
-        ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(60),
           child: Container(
             color: Colors.white,
             child: Padding(
-              padding: EdgeInsets.all(8.0),
+              padding : EdgeInsets.all(8.0),
               child: TextField(
                 controller: searchController,
                 onChanged: (value) {
-                  _searchData();
+                  setState(() {
+                    _searchData();
+                  });
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.search),
@@ -178,14 +159,19 @@ class _StudentInfoState extends State<StudentInfo> {
           : ListView.separated(
               itemBuilder: (context, index) {
                 final student = _studentsData[index];
+                final imageUrl = student.imageurl;
 
                 return ListTile(
                   onTap: () {
-                    // Navigate to student profile or details
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => StudentProfileScreen(student: student),
+                      ),
+                    );
                   },
                   leading: GestureDetector(
                     onTap: () {
-                      if (student.imageurl != null) {
+                      if (imageUrl != null) {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -193,7 +179,7 @@ class _StudentInfoState extends State<StudentInfo> {
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Image.file(File(student.imageurl!)),
+                                  Image.file(File(imageUrl)),
                                 ],
                               ),
                             );
@@ -202,12 +188,8 @@ class _StudentInfoState extends State<StudentInfo> {
                       }
                     },
                     child: CircleAvatar(
-                      backgroundImage: student.imageurl != null
-                          ? FileImage(File(student.imageurl!))
-                          : null,
-                      child: student.imageurl == null
- ? Icon(Icons.person)
-                          : null,
+                      backgroundImage: imageUrl != null ? FileImage(File(imageUrl)) : null,
+                      child: imageUrl == null ? Icon(Icons.person) : null,
                     ),
                   ),
                   title: Text(student.name),
@@ -237,7 +219,7 @@ class _StudentInfoState extends State<StudentInfo> {
                                 ),
                                 TextButton(
                                   onPressed: () async {
-                                    await deleteStudent(student.id!);
+                                    await deleteStudent(index);
                                     _fetchStudentsData();
                                     Navigator.of(context).pop();
                                     ScaffoldMessenger.of(context).showSnackBar(

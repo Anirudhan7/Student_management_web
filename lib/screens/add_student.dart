@@ -1,10 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:student_management_web/functions/functions.dart';
-import 'package:student_management_web/model/student_model.dart';
 import 'package:student_management_web/screens/student_list.dart';
-
+import '../functions/functions.dart';
+import '../model/student_model.dart';
 
 class AddStudent extends StatefulWidget {
   @override
@@ -17,7 +16,6 @@ class _AddStudentState extends State<AddStudent> {
   final nameController = TextEditingController();
   final departmentController = TextEditingController();
   final phonenoController = TextEditingController();
-  final addressController =TextEditingController();
   File? _selectedImage;
 
   void _setImage(File image) {
@@ -40,14 +38,12 @@ class _AddStudentState extends State<AddStudent> {
                 MaterialPageRoute(builder: (context) => StudentInfo()),
               );
             },
-            icon: Icon(Icons.supervised_user_circle_rounded,
-            size: 30,),
+            icon: Icon(Icons.supervised_user_circle_rounded, size: 30),
           )
         ],
       ),
       body: SingleChildScrollView(
-        padding:
-            const EdgeInsetsDirectional.symmetric(horizontal: 20, vertical: 60),
+        padding: const EdgeInsetsDirectional .symmetric(horizontal: 20, vertical: 60),
         child: Form(
           key: _formKey,
           child: Column(
@@ -72,12 +68,11 @@ class _AddStudentState extends State<AddStudent> {
                             height: 140,
                           ),
                         )
-                      : const Icon(Icons.add_a_photo_rounded,
-                      size: 50,),
+                      : const Icon(Icons.add_a_photo_rounded, size: 50),
                 ),
               ),
               SizedBox(height: 30),
-               TextFormField(
+              TextFormField(
                 keyboardType: TextInputType.name,
                 controller: nameController,
                 decoration: const InputDecoration(
@@ -88,14 +83,14 @@ class _AddStudentState extends State<AddStudent> {
                   if (value!.isEmpty) {
                     return 'Name is required';
                   }
-                  if(value.length<4){
+                  if (value.length < 4) {
                     return 'Name is too short';
                   }
                   return null;
                 },
                 onEditingComplete: () {
-          FocusScope.of(context).nextFocus();
-                      }
+                  FocusScope.of(context).nextFocus();
+                },
               ),
               SizedBox(height: 20),
               TextFormField(
@@ -112,11 +107,10 @@ class _AddStudentState extends State<AddStudent> {
                   return null;
                 },
                 onEditingComplete: () {
-          FocusScope.of(context).nextFocus();
-                      }
+                  FocusScope.of(context).nextFocus();
+                },
               ),
               SizedBox(height: 20),
-             
               TextFormField(
                 keyboardType: TextInputType.name,
                 controller: departmentController,
@@ -135,8 +129,8 @@ class _AddStudentState extends State<AddStudent> {
                   return null;
                 },
                 onEditingComplete: () {
-          FocusScope.of(context).nextFocus();
-                      }
+                  FocusScope.of(context).nextFocus();
+                },
               ),
               SizedBox(height: 20),
               TextFormField(
@@ -158,28 +152,17 @@ class _AddStudentState extends State<AddStudent> {
                   return null;
                 },
                 onEditingComplete: () {
-          FocusScope.of(context).unfocus();
-                      }
-              ),
-              SizedBox(height: 20,),
-              TextFormField(
-                controller: addressController,
-                keyboardType:TextInputType.streetAddress,
-                decoration: InputDecoration(
-                  labelText: "Adress",
-                  prefixIcon: Icon(Icons.note_rounded),
-                  border: OutlineInputBorder()
-                ),
-                validator: (value){
-                  if(value!.isEmpty){
-                    return "Address is required";
-                  }
-                  if(value.length==100){
-                    return "Address should not be too lenghty";
-                  }
+                  FocusScope.of(context).unfocus();
                 },
               ),
-              
+              SizedBox(height: 20),
+              TextFormField(
+                keyboardType: TextInputType.streetAddress,
+                decoration: InputDecoration(
+                  labelText: "Address",
+                  border: OutlineInputBorder(),
+                ),
+              ),
               SizedBox(height: 45),
               ElevatedButton(
                 onPressed: () async {
@@ -222,15 +205,13 @@ class _AddStudentState extends State<AddStudent> {
                     nameController.clear();
                     departmentController.clear();
                     phonenoController.clear();
-                    addressController.clear;
-                
                     setState(() {
                       _selectedImage = null;
                     });
                   }
                 },
                 child: Text("Save"),
-                style: ElevatedButton.styleFrom(
+ style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(horizontal: 45, vertical: 10),
                 ),
               ),
